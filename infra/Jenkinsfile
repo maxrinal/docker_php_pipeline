@@ -33,6 +33,7 @@ spec:
     }
     environment {
         // DOCKER_CREDENTIALS = credentials('DOCKER_HUB_CREDENTIALS')
+        EXTRA_VAR = "texto"
     }
     stages {
         stage('Main') {
