@@ -54,7 +54,7 @@ spec:
     environment {
         IMAGE_REPO = "ghcr.io/maxrinal"
         IMAGE_NAME = "alpine-apache-php"
-        IMAGE_TAG  = "${branchName}-${env.GIT_COMMIT[0..6]}"
+        IMAGE_TAG  = "${env.BRANCH_NAME}-${env.GIT_COMMIT[0..6]}"
     }
 
     stages {
