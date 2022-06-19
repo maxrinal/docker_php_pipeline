@@ -60,7 +60,7 @@ spec:
                     sh 'pwd'
                     sh """
                     #!/busybox/sh 
-                    /kaniko/executor --dockerfile Dockerfile --context `pwd`/app_files --verbosity debug --insecure --skip-tls-verify --destination gcr.io/cloudorbit/app/uat/jenkinsapp:$BUILD_NUMBER
+                    /kaniko/executor --dockerfile Dockerfile --context `pwd`/app_files --verbosity debug --insecure --skip-tls-verify 
                     """
                 }
             }
