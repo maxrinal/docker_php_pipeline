@@ -29,16 +29,14 @@ spec:
     command:
     - /busybox/cat
     tty: true
-#     volumeMounts:
-#       - name: kaniko-secret
-#         mountPath: /secret
-#     env:
-#       - name: GOOGLE_APPLICATION_CREDENTIALS
-#         value: /secret/kaniko-secret.json
-#   volumes:
-#     - name: kaniko-secret
-#       secret:
-#         secretName: kaniko-secret
+    volumeMounts:
+      - name: kaniko-secret
+        mountPath: /kaniko/.docker
+  volumes:
+    - name: kaniko-secret
+      secret:
+        secretName: ghcr-creds
+# kubectl -n jenkins-jobs create secret docker-registry ghcr-creds --docker-username=${username} --docker-password=${token} --docker-server=ghcr.io --docker-email=asdf@asdf.com
 '''
             // Can also wrap individual steps:
             // container('shell') {
@@ -48,9 +46,9 @@ spec:
         }
     }
     environment {
-        // DOCKER_CREDENTIALS = credentials('DOCKER_HUB_CREDENTIALS')
-        EXTRA_VAR = "texto"
-        BUILD_NUMBER = 25
+        IMAGE_REPO = "ghcr.io/maxrinal"
+        IMAGE_NAME = "alpine-apache-php"
+        IMAGE_TAG  = "${branchName}-${env.GIT_COMMIT[0..6]}"
     }
 
     stages {
@@ -60,10 +58,12 @@ spec:
                     sh 'pwd'
                     sh """
                     #!/busybox/sh 
-                    /kaniko/executor --dockerfile Dockerfile --context `pwd`/app_files --verbosity debug --insecure --skip-tls-verify --no-push
+                    /kaniko/executor --dockerfile Dockerfile --context `pwd`/app_files --verbosity debug --insecure --skip-tls-verify --destination ${IMAGE_REPO}/${IMAGE_NAME}:${IMAGE_TAG} --destination ${IMAGE_REPO}/${IMAGE_NAME}:latest
+                    # /kaniko/executor --dockerfile Dockerfile --context `pwd`/app_files --verbosity debug --insecure --skip-tls-verify --no-push
                     """
                 }
             }
         }
     }
 }
+
