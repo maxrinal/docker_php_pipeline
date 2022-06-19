@@ -1,0 +1,49 @@
+// Uses Declarative syntax to run commands inside a container.
+pipeline {
+    agent {
+        kubernetes {
+            // Rather than inline YAML, in a multibranch Pipeline you could use: yamlFile 'jenkins-pod.yaml'
+            // Or, to avoid YAML:
+            // containerTemplate {
+            //     name 'shell'
+            //     image 'ubuntu'
+            //     command 'sleep'
+            //     args 'infinity'
+            // }
+            yaml '''
+apiVersion: v1
+kind: Pod
+spec:
+  securityContext:
+    fsGroup: 1000
+  containers:
+  - name: shell
+    image: alpine
+    command:
+    - sleep
+    args:
+    - inf
+'''
+            // Can also wrap individual steps:
+            // container('shell') {
+            //     sh 'hostname'
+            // }
+            defaultContainer 'shell'
+        }
+    }
+    environment {
+        // DOCKER_CREDENTIALS = credentials('DOCKER_HUB_CREDENTIALS')
+    }
+    stages {
+        stage('Main') {
+            steps {
+                sh 'pwd'
+                sh 'echo ----------'
+                sh 'whoami'
+                sh 'echo ----------'
+                sh 'ls'
+                sh 'sleep 300 '
+            }
+        }
+    }
+}
