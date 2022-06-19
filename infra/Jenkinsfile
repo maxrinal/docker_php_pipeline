@@ -33,9 +33,15 @@ spec:
       - name: kaniko-secret
         mountPath: /kaniko/.docker
   volumes:
-    - name: kaniko-secret
-      secret:
-        secretName: ghcr-creds
+  - name: kaniko-secret
+    projected:
+      sources:
+      - secret:
+          name: ghcr-creds
+          items:
+            - key: .dockerconfigjson
+              path: config.json
+        
 # kubectl -n jenkins-jobs create secret docker-registry ghcr-creds --docker-username=${username} --docker-password=${token} --docker-server=ghcr.io --docker-email=asdf@asdf.com
 '''
             // Can also wrap individual steps:
