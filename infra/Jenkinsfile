@@ -52,25 +52,18 @@ spec:
         EXTRA_VAR = "texto"
         BUILD_NUMBER = 25
     }
+
     stages {
-        // stage('Main') {
-        //     steps {
-        //         sh 'pwd'
-        //         sh 'echo ----------'
-        //         sh 'whoami'
-        //         sh 'echo ----------'
-        //         sh 'ls'
-        //         sh 'sleep 300 '
-        //     }
-        // }
         stage('Build'){
-            container(name: 'kaniko', shell: '/busybox/sh') {
-                sh 'pwd'
-                sh """
-                #!/busybox/sh 
-                /kaniko/executor --dockerfile Dockerfile --context `pwd`/app_files --verbosity debug --insecure --skip-tls-verify --destination gcr.io/cloudorbit/app/uat/jenkinsapp:$BUILD_NUMBER
-                """
-            }  
+            steps {
+                container(name: 'kaniko', shell: '/busybox/sh') {
+                    sh 'pwd'
+                    sh """
+                    #!/busybox/sh 
+                    /kaniko/executor --dockerfile Dockerfile --context `pwd`/app_files --verbosity debug --insecure --skip-tls-verify --destination gcr.io/cloudorbit/app/uat/jenkinsapp:$BUILD_NUMBER
+                    """
+                }
+            }
         }
     }
 }
