@@ -53,16 +53,16 @@ spec:
         BUILD_NUMBER = 25
     }
     stages {
-        stage('Main') {
-            steps {
-                sh 'pwd'
-                sh 'echo ----------'
-                sh 'whoami'
-                sh 'echo ----------'
-                sh 'ls'
-                sh 'sleep 300 '
-            }
-        }
+        // stage('Main') {
+        //     steps {
+        //         sh 'pwd'
+        //         sh 'echo ----------'
+        //         sh 'whoami'
+        //         sh 'echo ----------'
+        //         sh 'ls'
+        //         sh 'sleep 300 '
+        //     }
+        // }
         stage('Build'){
             container(name: 'kaniko', shell: '/busybox/sh') {
                 sh 'pwd'
