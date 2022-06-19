@@ -23,6 +23,22 @@ spec:
     - sleep
     args:
     - inf
+
+  - name: kaniko
+    image: gcr.io/kaniko-project/executor:debug
+    command:
+    - /busybox/cat
+    tty: true
+#     volumeMounts:
+#       - name: kaniko-secret
+#         mountPath: /secret
+#     env:
+#       - name: GOOGLE_APPLICATION_CREDENTIALS
+#         value: /secret/kaniko-secret.json
+#   volumes:
+#     - name: kaniko-secret
+#       secret:
+#         secretName: kaniko-secret
 '''
             // Can also wrap individual steps:
             // container('shell') {
@@ -34,6 +50,7 @@ spec:
     environment {
         // DOCKER_CREDENTIALS = credentials('DOCKER_HUB_CREDENTIALS')
         EXTRA_VAR = "texto"
+        BUILD_NUMBER = 25
     }
     stages {
         stage('Main') {
@@ -45,6 +62,15 @@ spec:
                 sh 'ls'
                 sh 'sleep 300 '
             }
+        }
+        stage('Build'){
+            container(name: 'kaniko', shell: '/busybox/sh') {
+                sh 'pwd'
+                sh """
+                #!/busybox/sh 
+                /kaniko/executor --dockerfile Dockerfile --context `pwd`/app_files --verbosity debug --insecure --skip-tls-verify --destination gcr.io/cloudorbit/app/uat/jenkinsapp:$BUILD_NUMBER
+                """
+            }  
         }
     }
 }
