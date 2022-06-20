@@ -25,6 +25,10 @@ RUN apk --no-cache --update \
     php8-phar \
     php8-session \
     php8-xml \
+    php-tokenizer \
+    php-xmlwriter \
+    && curl -L -o /tmp/phpunit https://phar.phpunit.de/phpunit-9.5.9.phar  \
+    && install /tmp/phpunit /usr/local/bin  \
     && mkdir /htdocs
 
 #     && echo "<?php echo 'hello' .PHP_EOL; phpinfo(); "  | tee /htdocs/index.php
