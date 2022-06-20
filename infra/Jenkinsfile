@@ -57,7 +57,6 @@ spec:
                     # Careful!!! base64 credentials can be seen in console output
                     echo {\\"auths\\":{\\"ghcr.io\\":{\\"auth\\":\\"\$(echo -n ${CI_REGISTRY_CREDENTIALS} | base64)\\"}}} > /kaniko/.docker/config.json
                     /kaniko/executor --dockerfile Dockerfile --context `pwd`/app_files --cache=true --cache-copy-layers=true --verbosity debug --insecure --skip-tls-verify --destination ${IMAGE_REPO}/${IMAGE_NAME}:${IMAGE_TAG} --destination ${IMAGE_REPO}/${IMAGE_NAME}:latest
-                    sleep 30 
                     """
                 }
             }
